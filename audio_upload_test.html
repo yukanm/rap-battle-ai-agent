@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音声ファイルアップロードテスト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            transition: border-color 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #007bff;
+        }
+        .upload-area.dragover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .file-info {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>音声ファイルアップロードテスト</h1>
+    
+    <div class="upload-area" id="uploadArea">
+        <p>音声ファイルをドラッグ&ドロップするか、下のボタンで選択してください</p>
+        <p><small>サポート形式: WebM, WAV, MP3, M4A, OGG, AAC (最大10MB)</small></p>
+        <input type="file" id="fileInput" accept="audio/*" style="display: none;">
+        <button class="button" id="selectButton" onclick="document.getElementById('fileInput').click()">ファイルを選択</button>
+    </div>
+    
+    <div id="fileInfo" class="file-info" style="display: none;"></div>
+    <div id="status"></div>
+    <div id="result" class="result" style="display: none;"></div>
+    
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const status = document.getElementById('status');
+        const result = document.getElementById('result');
+        const selectButton = document.getElementById('selectButton');
+        
+        let isProcessing = false;
+        
+        // ドラッグ&ドロップ機能
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!isProcessing) {
+                uploadArea.classList.add('dragover');
+            }
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (!isProcessing) {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            }
+        });
+        
+        // ファイル選択機能
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && !isProcessing) {
+                handleFile(file);
+            }
+        });
+        
+        function handleFile(file) {
+            // ファイル情報を表示
+            fileInfo.style.display = 'block';
+            fileInfo.innerHTML = `
+                <strong>選択されたファイル:</strong><br>
+                名前: ${file.name}<br>
+                サイズ: ${(file.size / 1024 / 1024).toFixed(2)} MB<br>
+                タイプ: ${file.type}
+            `;
+            
+            // ファイル形式の検証（MIMEタイプと拡張子の両方をチェック）
+            const allowedTypes = ['audio/webm', 'audio/wav', 'audio/mp3', 'audio/m4a', 'audio/ogg', 'audio/aac'];
+            const allowedExtensions = ['.webm', '.wav', '.mp3', '.m4a', '.ogg', '.aac'];
+            
+            const hasValidType = allowedTypes.includes(file.type);
+            const hasValidExtension = allowedExtensions.some(ext => 
+                file.name.toLowerCase().endsWith(ext)
+            );
+            
+            if (!hasValidType && !hasValidExtension) {
+                status.innerHTML = '<span style="color: red;">サポートされていない音声ファイル形式です。</span>';
+                return;
+            }
+            
+            // ファイルサイズの検証（10MB以下）
+            if (file.size > 10 * 1024 * 1024) {
+                status.innerHTML = '<span style="color: red;">ファイルサイズが大きすぎます。10MB以下のファイルを選択してください。</span>';
+                return;
+            }
+            
+            // ファイルをアップロード
+            uploadAudioFile(file);
+        }
+        
+        async function uploadAudioFile(file) {
+            try {
+                isProcessing = true;
+                selectButton.disabled = true;
+                selectButton.innerHTML = '<span class="loading"></span> 処理中...';
+                status.innerHTML = '<span style="color: blue;">音声ファイルをアップロード中...</span>';
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                const response = await fetch('http://localhost:8081/voice_chat', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                result.style.display = 'block';
+                result.innerHTML = `
+                    <h3>結果:</h3>
+                    <p><strong>音声認識結果:</strong> ${data.transcript}</p>
+                    <p><strong>エージェント応答:</strong> ${data.response}</p>
+                `;
+                status.innerHTML = '<span style="color: green;">完了</span>';
+                
+            } catch (error) {
+                console.error('音声アップロードエラー:', error);
+                result.style.display = 'block';
+                result.innerHTML = `<p style="color: red;">エラー: ${error.message}</p>`;
+                status.innerHTML = '<span style="color: red;">エラーが発生しました</span>';
+            } finally {
+                isProcessing = false;
+                selectButton.disabled = false;
+                selectButton.innerHTML = 'ファイルを選択';
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,60 @@
+openapi: "3.0.0"
+info:
+  title: "Rap Battle API"
+  description: "Generates a rap battle between two AI rappers."
+  version: "1.0.0"
+servers:
+  - url: https://rap-agent-service-866844216117.asia-northeast1.run.app
+paths:
+  /generate-battle:
+    post:
+      summary: "Generate Rap Battle"
+      description: "Creates a full rap battle between a street champion rapper and an engineer rapper."
+      operationId: "generateBattle"
+      responses:
+        "200":
+          description: "A successful response."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  generated_rap:
+                    type: "string"
+                    description: "The full text of the generated rap battle."
+  /continue-battle:
+    post:
+      summary: "Continue Rap Battle"
+      description: "Responds to the user's rap with the next turn in the battle."
+      operationId: "continueBattle"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_rap:
+                  type: string
+                  description: "The user's latest rap verse."
+                history:
+                  type: array
+                  description: "The history of the rap battle so far."
+                  items:
+                    type: object
+                    properties:
+                      user:
+                        type: string
+                      agent:
+                        type: string
+      responses:
+        "200":
+          description: "A successful response with the agent's rap."
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  agent_rap:
+                    type: "string"
+                    description: "The agent's generated rap response."

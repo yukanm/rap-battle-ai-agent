@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+google-cloud-dialogflow-cx
+google-cloud-speech
+google-cloud-texttospeech
+python-multipart
+gunicorn
