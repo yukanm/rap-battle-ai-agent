@@ -1,6 +1,6 @@
 # Rap Agent - 音声認識チャットアプリ
 
-ラップエージェントと音声で対話できるチャットアプリケーションです。Google CloudのDialogflow CX、Speech-to-Text、Text-to-Speechサービスを活用して、自然な音声対話を実現します。
+ラップエージェントと音声で対話できるチャットアプリケーションです。Google CloudのDialogflow CX、Speech-to-Text、Text-to-Speech*サービスを活用して、自然な音声対話を実現します。
 
 ## 🏗️ アーキテクチャ
 
@@ -14,7 +14,7 @@
                     │       │       │
               ┌─────▼─────┐ │ ┌─────▼─────┐
               │ Speech-to │ │ │ Text-to-  │
-              │   Text    │ │ │  Speech   │
+              │   Text    │ │ │  Speech*  │
               └───────────┘ │ └───────────┘
                            │
                     ┌───────▼───────┐
@@ -26,9 +26,9 @@
 ## 🚀 機能
 
 - **テキストチャット**: Dialogflow CXを使用した自然な対話
-- **音声チャット**: 音声入力と音声応答による対話
+- **音声チャット**: 音声入力による対話（音声応答は今後の拡張で実装予定）
 - **セッション管理**: 継続的な会話コンテキストの保持
-- **リアルタイム処理**: 高速な音声認識と合成
+- **リアルタイム処理**: 高速な音声認識
 - **レスポンシブUI**: モダンなReactベースのフロントエンド
 
 ## 🛠️ 技術スタック
@@ -45,7 +45,7 @@
 - **Uvicorn** - ASGIサーバー
 - **Google Cloud Dialogflow CX** - 自然言語処理
 - **Google Cloud Speech-to-Text** - 音声認識
-- **Google Cloud Text-to-Speech** - 音声合成
+- **Google Cloud Text-to-Speech*** - 音声合成
 
 ### インフラ
 - **Google Cloud Run** - サーバーレスコンテナ実行環境
@@ -60,7 +60,7 @@ rap-agent/
 │   ├── api_server.py            # FastAPIメインサーバー
 │   ├── dialogflow_client.py     # Dialogflow CXクライアント
 │   ├── stt.py                   # Speech-to-Text処理
-│   ├── tts.py                   # Text-to-Speech処理
+│   ├── tts.py*                  # Text-to-Speech処理
 │   └── requirements.txt         # Python依存関係
 ├── frontend/                     # フロントエンドアプリケーション
 │   ├── src/                     # Reactソースコード
@@ -116,7 +116,7 @@ gcloud services enable run.googleapis.com
 4. 以下の権限を付与：
    - Dialogflow API User
    - Cloud Speech-to-Text User
-   - Cloud Text-to-Speech User
+   - Cloud Text-to-Speech User*
    - Cloud Run Admin（デプロイ用）
 
 #### 認証キーの作成
@@ -212,7 +212,7 @@ GET /health
 
 ### 音声処理
 - **Speech-to-Text**: 複数の音声形式に対応（MP3, WAV, WebM, M4A等）
-- **Text-to-Speech**: 日本語音声合成（MP3形式）
+- **Text-to-Speech***: 日本語音声合成
 - 自動音声形式検出と適切な処理
 
 ### セッション管理
@@ -250,4 +250,9 @@ gcloud run services logs read rap-agent-backend --region=asia-northeast1
 
 ## 📞 サポート
 
-問題や質問がある場合は、GitHubのIssuesページでお知らせください。 
+問題や質問がある場合は、GitHubのIssuesページでお知らせください。
+
+---
+
+**注釈**
+* Text-to-Speech (TTS) は6/30時点で未使用ですが、今後の拡張で音声応答機能の実装を予定しています。 
