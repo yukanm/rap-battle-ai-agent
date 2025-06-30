@@ -1,6 +1,23 @@
 import { useState, useCallback } from 'react';
 import { Message, ApiResponse, VoiceResponse } from '../types/chat';
 
+// 環境に応じたAPI URLを取得する関数
+const getApiUrl = (): string => {
+  // 本番環境の場合（環境変数が設定されている場合）
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  
+  // 開発環境の場合（localhost）
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:8081';
+  }
+  
+  // その他の場合（本番環境で環境変数が未設定の場合）
+  // デフォルトで現在のドメインを使用
+  return window.location.origin;
+};
+
 // レスポンスから【結果の提示】部分のみを抽出する関数
 const extractResponseContent = (response: string): string => {
   // 【結果の提示】以降の部分を抽出
@@ -42,7 +59,8 @@ export const useChat = () => {
       
       console.log('Sending request:', requestBody);
       
-      const apiUrl = process.env.REACT_APP_API_URL || '';
+      const apiUrl = getApiUrl();
+      console.log('Using API URL:', apiUrl);
 
       const response = await fetch(`${apiUrl}/text_chat`, {
         method: 'POST',
@@ -109,7 +127,8 @@ export const useChat = () => {
       const fileName = audioBlob.type.includes('webm') ? 'audio.webm' : 'audio.wav';
       formData.append('file', audioBlob, fileName);
 
-      const apiUrl = process.env.REACT_APP_API_URL || '';
+      const apiUrl = getApiUrl();
+      console.log('Using API URL for voice:', apiUrl);
 
       const response = await fetch(`${apiUrl}/voice_chat`, {
         method: 'POST',

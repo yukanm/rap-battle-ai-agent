@@ -5,3 +5,5 @@ google-cloud-speech
 google-cloud-texttospeech
 python-multipart
 gunicorn
+starlette
+python-dotenv
