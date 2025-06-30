@@ -128,10 +128,38 @@ build/
 ehthumbs.db
 Thumbs.db
 
-# Google Cloud
-*.json
-!package.json
-!package-lock.json
+# Google Cloud - センシティブなファイル
+# 認証情報ファイル
+*-service-account*.json
+*service-account*.json
+*credentials*.json
+*key*.json
+rap-agent-*.json
+
+# 本番用ファイル（センシティブ情報含む）
+Dockerfile
+deploy-production.sh
+
+# テスト用・一時的ファイル
+Dockerfile.fixed
+Dockerfile.simple
+deploy-fixed.sh
+deploy-simple-test.sh
+deploy-simple.sh
+deploy-no-buildx.sh
+deploy.sh
+api_client_test.py
+agenttest.py
+index.html
+cloudbuild.yaml
+DEPLOYMENT.md
+test.Dockerfile
+test_api.py
+audio_upload_test.html
+voice_test.html
+app/api_server_fixed.py
+app/simple_api.py
+app/api_server.py.bkup
 
 # Logs
 *.log
