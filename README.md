@@ -97,7 +97,7 @@ cd rap-agent
 gcloud auth login
 
 # プロジェクトを設定
-gcloud config set project rap-agent-202506
+gcloud config set project YOUR_PROJECT_ID
 
 # 必要なAPIを有効化
 gcloud services enable dialogflow.googleapis.com
@@ -108,7 +108,24 @@ gcloud services enable run.googleapis.com
 
 ### 3. 認証情報の設定
 
-Dialogflow CX、Speech-to-Text、Text-to-Speechサービスを使用するための認証情報を設定します。
+#### サービスアカウントの作成
+
+1. **Google Cloud Console**でIAM & Admin > Service Accountsに移動
+2. **Create Service Account**をクリック
+3. サービスアカウント名を入力（例：`rap-agent-service`）
+4. 以下の権限を付与：
+   - Dialogflow API User
+   - Cloud Speech-to-Text User
+   - Cloud Text-to-Speech User
+   - Cloud Run Admin（デプロイ用）
+
+#### 認証キーの作成
+
+1. 作成したサービスアカウントの詳細ページで**Keys**タブを選択
+2. **Add Key** > **Create new key**をクリック
+3. **JSON**形式を選択してダウンロード
+4. ダウンロードしたJSONファイルをプロジェクトルートに配置
+5. 環境変数`GOOGLE_APPLICATION_CREDENTIALS`にファイルパスを設定
 
 ### 4. ローカル開発
 
@@ -146,13 +163,13 @@ chmod +x deploy-production.sh
 
 ### バックエンド
 
-| 変数名 | 説明 | デフォルト値 |
-|--------|------|-------------|
-| `DIALOGFLOW_PROJECT_ID` | Dialogflow CXプロジェクトID | `rap-agent-202506` |
-| `DIALOGFLOW_LOCATION_ID` | Dialogflow CXロケーション | `asia-northeast1` |
-| `DIALOGFLOW_AGENT_ID` | Dialogflow CXエージェントID | `135b32f7-45b4-4781-8c58-9fe4044dbfa2` |
-| `DIALOGFLOW_LANGUAGE_CODE` | 言語コード | `ja-JP` |
-| `GOOGLE_APPLICATION_CREDENTIALS` | 認証情報ファイルパス | `/app/rap-agent-202506-974cb26c7c90.json` |
+| 変数名 | 説明 | 設定方法 |
+|--------|------|----------|
+| `DIALOGFLOW_PROJECT_ID` | Dialogflow CXプロジェクトID | Google CloudプロジェクトID |
+| `DIALOGFLOW_LOCATION_ID` | Dialogflow CXロケーション | `asia-northeast1`等 |
+| `DIALOGFLOW_AGENT_ID` | Dialogflow CXエージェントID | Dialogflow CXコンソールで確認 |
+| `DIALOGFLOW_LANGUAGE_CODE` | 言語コード | `ja-JP`等 |
+| `GOOGLE_APPLICATION_CREDENTIALS` | 認証情報ファイルパス | サービスアカウントキーのJSONファイルパス |
 
 ### フロントエンド
 
@@ -210,6 +227,7 @@ GET /health
 1. **404エラー**: バックエンドサービスが正常に起動していない
 2. **音声認識エラー**: 音声ファイル形式が対応外
 3. **CORSエラー**: フロントエンドとバックエンドのオリジン設定
+4. **認証エラー**: サービスアカウントキーが正しく設定されていない
 
 ### ログの確認
 
