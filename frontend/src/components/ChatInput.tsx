@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { SimpleVoiceRecorder } from './SimpleVoiceRecorder';
-import { AudioUploader } from './AudioUploader';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -59,12 +58,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <div className="flex gap-2">
           <SimpleVoiceRecorder 
             onRecordingComplete={onVoiceMessage}
-            disabled={isLoading}
-            isLoading={isLoading}
-          />
-          
-          <AudioUploader 
-            onAudioUpload={onVoiceMessage}
             disabled={isLoading}
             isLoading={isLoading}
           />
