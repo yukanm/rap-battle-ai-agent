@@ -16,7 +16,7 @@ function App() {
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
               <span className="text-white font-bold">AI</span>
             </div>
-            <h1 className="text-xl font-semibold text-gray-900">AIエージェントチャット</h1>
+            <h1 className="text-xl font-semibold text-gray-900">人間 vs AI ラップバトルエージェント</h1>
           </div>
           <button
             onClick={clearChat}

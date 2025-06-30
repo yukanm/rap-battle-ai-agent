@@ -23,9 +23,9 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ messages, isLoadin
       {messages.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <div className="text-center text-gray-500">
-            <div className="text-6xl mb-4">🤖</div>
-            <h3 className="text-lg font-medium mb-2">AIエージェントとチャットを開始</h3>
-            <p className="text-sm">何でもお気軽にお聞きください</p>
+            <div className="text-6xl mb-4">🎤</div>
+            <h3 className="text-lg font-medium mb-2">ラップバトルを開始</h3>
+            <p className="text-sm">テキストまたは音声でラップバトルを楽しもう！</p>
           </div>
         </div>
       ) : (
