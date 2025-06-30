@@ -1,5 +1,12 @@
 # Rap Agent - 音声認識チャットアプリ
 
+**⚠️ このブランチは現在開発中です。Google Agent Hackathon提出用ブランチは以下です：**
+
+- [v1ブランチ](https://github.com/yukanm/rap-battle-ai-agent/tree/v1)
+- [v1_humanvsaiブランチ](https://github.com/yukanm/rap-battle-ai-agent/tree/v1_humanvsai)
+
+---
+
 ラップエージェントと音声で対話できるチャットアプリケーションです。Google CloudのDialogflow CX、Speech-to-Text、Text-to-Speechサービスを活用して、自然な音声対話を実現します。
 
 ## 🏗️ アーキテクチャ
