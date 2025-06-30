@@ -1,0 +1,18 @@
+{
+  "name": "ai-rap-battle-shared",
+  "version": "1.0.0",
+  "description": "Shared types and utilities for AI Rap Battle application",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "clean": "rm -rf dist",
+    "lint": "echo 'No files to lint in shared package'",
+    "lint:fix": "echo 'No files to fix in shared package'"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}

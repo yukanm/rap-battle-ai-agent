@@ -1,0 +1,58 @@
+# 軽量な本番用 Dockerfile（コスト最適化版）
+FROM node:18-alpine AS builder
+
+# 必要なツールのみインストール
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# 依存関係ファイルのみコピー（キャッシュ効率化）
+COPY package*.json ./
+COPY backend/package*.json ./backend/
+COPY shared/package*.json ./shared/
+
+# 本番用依存関係のインストール
+RUN npm ci --workspace=shared --workspace=backend --omit=dev
+
+# ソースコードをコピー
+COPY shared ./shared
+COPY backend ./backend
+
+# TypeScript ビルド
+RUN npm run build:shared && npm run build:backend
+
+# 実行用の超軽量イメージ
+FROM node:18-alpine
+
+# セキュリティ: 非rootユーザー作成
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
+
+WORKDIR /app
+
+# 本番用ファイルのみコピー
+COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nodejs:nodejs /app/backend/package*.json ./backend/
+COPY --from=builder --chown=nodejs:nodejs /app/shared/package*.json ./shared/
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/backend/node_modules ./backend/node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/shared/node_modules ./shared/node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/shared/dist ./shared/dist
+COPY --from=builder --chown=nodejs:nodejs /app/backend/dist ./backend/dist
+
+# 環境変数設定
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=512"
+
+# 非rootユーザーに切り替え
+USER nodejs
+
+# Cloud Run のデフォルトポート
+EXPOSE 8080
+
+# ヘルスチェック
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8080/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"
+
+# アプリケーション起動
+CMD ["node", "--enable-source-maps", "backend/dist/index.js"]

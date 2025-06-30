@@ -1,0 +1,43 @@
+{
+  "name": "ai-rap-battle",
+  "version": "1.0.0",
+  "description": "AI-powered real-time rap battle application using Google Cloud Vertex AI",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build:shared && npm run build:frontend && npm run build:backend",
+    "build:shared": "npm run build --workspace=shared",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces",
+    "test": "npm run test --workspaces",
+    "deploy": "npm run deploy:backend && npm run deploy:frontend",
+    "deploy:backend": "./scripts/deploy-backend.sh",
+    "deploy:frontend": "./scripts/deploy-frontend.sh"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "@types/node": "^20.11.0",
+    "@types/recordrtc": "^5.6.14",
+    "concurrently": "^8.2.2",
+    "playwright": "^1.53.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "puppeteer": "^24.11.1",
+    "socket.io-client": "^4.8.1"
+  }
+}

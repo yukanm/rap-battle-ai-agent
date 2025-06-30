@@ -1,0 +1,37 @@
+version: '3.8'
+
+# Redisを削除 - メモリキャッシュを使用
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3456:3456"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8456
+      - NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:8456
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8456:8456"
+    environment:
+      - NODE_ENV=development
+      - PORT=8456
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - /app/dist

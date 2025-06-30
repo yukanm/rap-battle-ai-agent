@@ -1,0 +1,336 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-gray-200 dark:border-gray-800;
+  }
+  body {
+    @apply bg-black text-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-color: #0a0a0a;
+    background-image: 
+      radial-gradient(circle at 25% 25%, #1a0033 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, #330019 0%, transparent 50%);
+  }
+  
+  /* Japanese font support */
+  body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+/* Custom scrollbar */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--primary)) rgb(var(--background));
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: rgb(var(--background));
+    border-radius: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgb(var(--primary));
+    border-radius: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--primary) / 0.8);
+  }
+}
+
+/* Custom animations */
+@layer utilities {
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Graffiti text effect - English */
+  .graffiti-text {
+    font-family: var(--font-graffiti), 'Permanent Marker', cursive;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 
+      3px 3px 0px #8b5cf6,
+      6px 6px 0px #7c3aed,
+      9px 9px 15px rgba(0,0,0,0.8),
+      0 0 80px rgba(139, 92, 246, 0.4);
+    transform: rotate(-3deg) skew(-5deg);
+    display: inline-block;
+  }
+  
+  /* Japanese battle text effect */
+  .battle-text-jp {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 
+      4px 4px 0px #000,
+      -1px -1px 0px #000,
+      1px -1px 0px #000,
+      -1px 1px 0px #000,
+      1px 1px 0px #000;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    transform: perspective(400px) rotateY(-5deg) rotateX(2deg);
+    display: inline-block;
+  }
+  
+  /* Katakana aggressive style */
+  .katakana-style {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    background: linear-gradient(180deg, #fff 0%, #fff 50%, #f0f0f0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    position: relative;
+  }
+  
+  .katakana-style::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    color: #000;
+    text-shadow: 
+      3px 3px 0px #000,
+      -1px -1px 0px #000,
+      1px -1px 0px #000,
+      -1px 1px 0px #000;
+  }
+  
+  /* Slash effect for battle text */
+  .slash-decoration {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .slash-decoration::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    top: 45%;
+    width: 120%;
+    height: 4px;
+    background: #ff0000;
+    transform: rotate(-15deg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+  
+  /* Graffiti outline style */
+  .graffiti-outline {
+    font-family: var(--font-display), 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 3px #fff;
+    text-stroke: 3px #fff;
+    text-shadow: 
+      5px 5px 0px #8b5cf6,
+      10px 10px 0px #7c3aed,
+      15px 15px 20px rgba(0,0,0,0.5);
+  }
+
+  /* Subtle glow effect */
+  .subtle-glow {
+    text-shadow: 
+      0 0 20px rgba(147, 51, 234, 0.3),
+      0 0 40px rgba(147, 51, 234, 0.1);
+  }
+  
+  /* HipHop tag style */
+  .hiphop-tag {
+    font-family: var(--font-display), 'Bebas Neue', sans-serif;
+    background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    transform: skew(-10deg);
+  }
+  
+  /* Japanese MC Battle Title Style */
+  .mc-battle-title-jp {
+    position: relative;
+    display: inline-block;
+    transform: skew(-10deg, 0);
+  }
+  
+  .mc-battle-title-jp .main-text {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #000;
+    background: #fff;
+    padding: 0.2em 0.5em;
+    letter-spacing: -0.08em;
+    line-height: 0.9;
+    display: inline-block;
+    position: relative;
+    border: 6px solid #000;
+    margin: 0.1em;
+  }
+  
+  .mc-battle-title-jp .sub-text {
+    font-family: var(--font-display), 'Bebas Neue', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: #ff0000;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    position: absolute;
+    bottom: -0.5em;
+    right: 0;
+    background: #000;
+    padding: 0.1em 0.5em;
+    transform: skew(-10deg);
+  }
+
+  .neon-border {
+    box-shadow: 
+      0 0 10px rgba(147, 51, 234, 0.5),
+      0 0 20px rgba(147, 51, 234, 0.3),
+      inset 0 0 10px rgba(147, 51, 234, 0.2);
+  }
+}
+
+/* Battle animations */
+@layer components {
+  .battle-text {
+    @apply font-bold text-transparent bg-clip-text bg-gradient-to-r from-battle-red to-battle-blue;
+  }
+
+  .neon-text {
+    @apply text-neon-purple;
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .battle-card {
+    @apply glass-effect rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
+  }
+
+  .pulse-border {
+    @apply relative;
+  }
+
+  .pulse-border::before {
+    content: '';
+    @apply absolute inset-0 rounded-lg;
+    background: linear-gradient(135deg, theme(colors.neon-purple), theme(colors.neon-pink));
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+/* Performance optimizations */
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img {
+    content-visibility: auto;
+  }
+}
